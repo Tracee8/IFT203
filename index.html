@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IFT302 Library</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 0 10px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .upload-btn-top {
+            background: rgba(255, 255, 255, 0.95);
+            color: #667eea;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .upload-btn-top:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            background: #fff;
+        }
+
+        .upload-btn-top:active {
+            transform: translateY(0);
+        }
+
+        .subtitle {
+            text-align: left;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 25px;
+            font-size: 15px;
+            font-weight: 400;
+            padding: 0 10px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 12px;
+        }
+
+        .document-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .document-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            border-radius: 16px;
+            gap: 15px;
+            transition: all 0.3s ease;
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            text-align: center;
+            min-height: 180px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .document-item:hover {
+            border-color: #667eea;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.15);
+        }
+
+        .document-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .document-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .document-icon {
+            width: 48px;
+            height: 60px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .document-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .document-name {
+            font-size: 14px;
+            display: block;
+            color: #2d3748;
+            font-weight: 600;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            cursor: pointer;
+            text-decoration: none;
+            transition: color 0.2s;
+            line-height: 1.4;
+            max-width: 100%;
+        }
+
+        .document-name:hover {
+            color: #667eea;
+        }
+
+        .document-meta {
+            color: #a0aec0;
+            font-size: 12px;
+            font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .remove-icon {
+            color: #cbd5e0;
+            cursor: pointer;
+            font-size: 20px;
+            line-height: 1;
+            padding: 6px 10px;
+            user-select: none;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-weight: 300;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .remove-icon:hover {
+            color: #e53e3e;
+            background: #fed7d7;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .stats {
+            text-align: center;
+            color: #a0aec0;
+            font-size: 13px;
+            margin-top: 20px;
+            font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #a0aec0;
+            padding: 50px 20px;
+            font-size: 15px;
+            grid-column: 1 / -1;
+        }
+
+        .success-msg {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: #fff;
+            padding: 14px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            display: none;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4);
+            animation: slideIn 0.3s ease;
+        }
+
+        .error-msg {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+            color: #fff;
+            padding: 14px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            display: none;
+            box-shadow: 0 4px 15px rgba(245, 101, 101, 0.4);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Tablet styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                margin: 20px auto;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .section {
+                padding: 25px;
+                border-radius: 16px;
+            }
+
+            .document-list {
+                gap: 15px;
+            }
+
+            .document-item {
+                padding: 25px 15px;
+                min-height: 160px;
+            }
+
+            .document-name {
+                font-size: 13px;
+            }
+        }
+
+        /* Mobile styles */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                margin: 10px auto;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+                padding: 0 5px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .upload-btn-top {
+                width: 100%;
+                justify-content: center;
+                padding: 14px;
+            }
+
+            .subtitle {
+                font-size: 14px;
+                margin-bottom: 20px;
+                padding: 0 5px;
+            }
+
+            .section {
+                padding: 20px;
+                margin-bottom: 15px;
+                border-radius: 14px;
+            }
+
+            .section-title {
+                font-size: 12px;
+            }
+
+            .document-list {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .document-item {
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 15px;
+                padding: 16px;
+                min-height: auto;
+                text-align: left;
+            }
+
+            .document-info {
+                align-items: flex-start;
+                width: auto;
+            }
+
+            .document-icon {
+                width: 40px;
+                height: 50px;
+                margin-bottom: 0;
+                flex-shrink: 0;
+            }
+
+            .document-name {
+                font-size: 14px;
+                text-align: left;
+            }
+
+            .document-meta {
+                justify-content: flex-start;
+                font-size: 12px;
+            }
+
+            .remove-icon {
+                position: static;
+                top: auto;
+                right: auto;
+            }
+
+            .stats {
+                text-align: center;
+                font-size: 12px;
+            }
+        }
+
+        /* Very small screens */
+        @media (max-width: 320px) {
+            h1 {
+                font-size: 20px;
+            }
+
+            .document-name {
+                font-size: 13px;
+            }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+          
+            <button class="upload-btn-top" id="uploadBtnTop">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                Upload
+            </button>
+        </div>
+
+        <div class="success-msg" id="successMsg"></div>
+        <div class="error-msg" id="errorMsg"></div>
+
+        <div class="section">
+            <ul class="document-list" id="documentList"></ul>
+            <div class="stats" id="docStats"></div>
+        </div>
+
+        <input type="file" class="file-input" id="fileInput" accept=".pdf,.doc,.docx,.txt">
+    </div>
+
+    <script>
+        // ===== CONFIGURATION =====
+        const FILE_BASE_PATH = './uploads/';
+
+        const initialDocuments = [
+            { id: 1, name: "1.06-jQuery-Intro.pdf", type: "PDF", size: "1.2 MB" },
+            { id: 2, name: "XML Basics.pdf", type: "PDF", size: "856 KB" },
+            { id: 3, name: "Web Development Training Notes_ Introduction to Web Development - DEV Community.pdf", type: "PDF", size: "1.5 MB" },
+            { id: 4, name: "REAL IFT 302 Notes.pdf", type: "PDF", size: "2.1 MB" },
+            { id: 5, name: "Lecture 1-Overview of WAP.pdf", type: "PDF", size: "340 KB" },
+            { id: 6, name: "javascript1.pdf", type: "PDF", size: "980 KB" },
+            { id: 7, name: "building-modern-web-applications-using-angular.9781785880728.73223.pdf", type: "PDF", size: "3.2 MB" },
+            { id: 8, name: "Introduction to MySQL.pdf", type: "PDF", size: "1.8 MB" }
+        ];
+
+        let documents = JSON.parse(localStorage.getItem('documents')) || initialDocuments;
+
+        const documentList = document.getElementById('documentList');
+        const docStats = document.getElementById('docStats');
+        const fileInput = document.getElementById('fileInput');
+        const uploadBtnTop = document.getElementById('uploadBtnTop');
+        const successMsg = document.getElementById('successMsg');
+        const errorMsg = document.getElementById('errorMsg');
+
+        function showMessage(text, isError = false) {
+            const msg = isError ? errorMsg : successMsg;
+            msg.textContent = text;
+            msg.style.display = 'block';
+            setTimeout(() => msg.style.display = 'none', 3000);
+        }
+
+        async function downloadFile(filename) {
+            const fileUrl = FILE_BASE_PATH + encodeURIComponent(filename);
+
+            try {
+                const response = await fetch(fileUrl);
+
+                if (!response.ok) {
+                    throw new Error(`File not found: ${filename}`);
+                }
+
+                const blob = await response.blob();
+
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+
+                showMessage(`Downloaded: ${filename}`);
+            } catch (err) {
+                console.error('Download error:', err);
+                showMessage(`Error: ${err.message}. Make sure the file exists in: ${FILE_BASE_PATH}`, true);
+            }
+        }
+
+        function removeDocument(id) {
+            documents = documents.filter(doc => doc.id !== id);
+            saveDocuments();
+            renderDocuments();
+            showMessage('Document removed');
+        }
+
+        function saveDocuments() {
+            localStorage.setItem('documents', JSON.stringify(documents));
+        }
+
+        function renderDocuments() {
+            documentList.innerHTML = '';
+
+            if (documents.length === 0) {
+                documentList.innerHTML = '<div class="empty-state">No documents available. Upload some files!</div>';
+                docStats.textContent = '';
+                return;
+            }
+
+            documents.forEach(doc => {
+                const li = document.createElement('li');
+                li.className = 'document-item';
+                li.onclick = function(e) {
+                    if (!e.target.classList.contains('remove-icon')) {
+                        downloadFile(doc.name);
+                    }
+                };
+                li.innerHTML = `
+                    <div class="document-info">
+                        <div class="document-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="#667eea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M14 2V8H20" stroke="#667eea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M16 13H8" stroke="#a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M16 17H8" stroke="#a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M10 9H9H8" stroke="#a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span class="document-name">${doc.name}</span>
+                        <span class="document-meta">${doc.type} &bull; ${doc.size}</span>
+                    </div>
+                    <span class="remove-icon" onclick="removeDocument(${doc.id})" title="Remove">×</span>
+                `;
+                documentList.appendChild(li);
+            });
+
+            docStats.textContent = `${documents.length} document${documents.length !== 1 ? 's' : ''} available`;
+        }
+
+        function handleFileUpload(file) {
+            if (!file) return;
+
+            const allowedExtensions = ['.pdf', '.doc', '.docx', '.txt'];
+            const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+
+            if (!allowedExtensions.includes(fileExtension)) {
+                showMessage('Invalid file type. Only PDF, DOC, DOCX, TXT allowed.', true);
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) {
+                showMessage('File too large. Maximum size is 10MB.', true);
+                return;
+            }
+
+            let sizeStr;
+            if (file.size < 1024) sizeStr = file.size + ' B';
+            else if (file.size < 1024 * 1024) sizeStr = (file.size / 1024).toFixed(1) + ' KB';
+            else sizeStr = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
+
+            const newDoc = {
+                id: Date.now(),
+                name: file.name,
+                type: fileExtension.toUpperCase().replace('.', ''),
+                size: sizeStr
+            };
+
+            documents.push(newDoc);
+            saveDocuments();
+            renderDocuments();
+            showMessage(`Uploaded: ${file.name}`);
+        }
+
+        uploadBtnTop.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', (e) => {
+            handleFileUpload(e.target.files[0]);
+            fileInput.value = '';
+        });
+
+        renderDocuments();
+    </script>
+</body>
+</html>
